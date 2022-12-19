@@ -20,51 +20,64 @@ sap.ui.define(
         }
       },
       onRouteMatched: function () {
-        setTimeout(this.getCurrentCarrierData.bind(this), 1000);
-        var regex = /^[A-Z]{2}$/;
         var sCarrier = window.location.href.slice(-2);
-        var isValid = regex.test(sCarrier);
-        if (isValid) {
+        var regex = /^[A-Z]{2}$/; //check if url ends with Carrid (Two capital letters)
+        var isPatternValid = regex.test(sCarrier);
+        if (isPatternValid) {
           this.getCarrierFlights();
+          this.getCurrentCarrierData();
         }
       },
       getCurrentCarrierData: function () {
         var sCarrier = window.location.href.slice(-2);
-        var sPath = "/scarrSet('" + sCarrier + "')";
-        var oCarrierData = this.getOwnerComponent()
-          .getModel("scarr")
-          .getProperty(sPath);
-        var oCarrierDetailModel =
-          this.getOwnerComponent().getModel("carrierDetail");
-        oCarrierDetailModel.setData(oCarrierData);
+        // var sPath = "/scarrSet('" + sCarrier + "')";
+        // var oCarrierData = this.getOwnerComponent()
+        //   .getModel("scarr")
+        //   .getProperty(sPath);
+        // var oCarrierDetailModel =
+        //   this.getOwnerComponent().getModel("carrierDetail");
+        // oCarrierDetailModel.setData(oCarrierData);
+        var oScarrModel = this.getOwnerComponent().getModel("scarr");
+        oScarrModel.read("/scarrSet('" + sCarrier + "')", {
+          success: function (oData) {
+            console.log(oData);
+            var oCarrierDetailModel =
+              this.getOwnerComponent().getModel("carrierDetail");
+            oCarrierDetailModel.setData(oData);
+          }.bind(this),
+          error: function (oData) {},
+        });
       },
       getCarrierFlights: function () {
         var sCarrier = window.location.href.slice(-2);
-        var oCarrierFilter = new sap.ui.model.Filter(
-          "Carrid",
-          sap.ui.model.FilterOperator.EQ,
-          sCarrier
-        );
-        var aFilters = [];
-        aFilters.push(oCarrierFilter);
+        // var oCarrierFilter = new sap.ui.model.Filter(
+        //   "Carrid",
+        //   sap.ui.model.FilterOperator.EQ,
+        //   sCarrier
+        // );
+        // var aFilters = [];
+        // aFilters.push(oCarrierFilter);
         var oSflightModel = this.getOwnerComponent().getModel("sflight");
-        oSflightModel.read("/sflightSet", {
-          filters: [aFilters],
-          success: function (oData) {
-            //oData parsed to JSON and bind to table
-            var convertedOData = oData.results.map(function (result) {
-              result.Fldate = result.Fldate.toLocaleString();
-              return result;
-            });
-            var oTable = this.getView().byId("idSflightTable");
-            var oJSONModel = new sap.ui.model.json.JSONModel();
-            oJSONModel.setData(convertedOData); //results because of nested data in model
-            oTable.setModel(oJSONModel);
-          }.bind(this),
-          error: function (oData) {
-            console.warn(oData);
-          },
-        });
+        oSflightModel.read(
+          "/scarrSet('" + sCarrier + "')" + "/scarr_to_sflight",
+          {
+            //filters: [aFilters],
+            success: function (oData) {
+              //oData parsed to JSON and bind to table
+              var convertedOData = oData.results.map(function (result) {
+                result.Fldate = result.Fldate.toLocaleString();
+                return result;
+              });
+              var oTable = this.getView().byId("idSflightTable");
+              var oJSONModel = new sap.ui.model.json.JSONModel();
+              oJSONModel.setData(convertedOData); //results because of nested data in model
+              oTable.setModel(oJSONModel);
+            }.bind(this),
+            error: function (oData) {
+              console.warn(oData);
+            },
+          }
+        );
       },
     });
   }
