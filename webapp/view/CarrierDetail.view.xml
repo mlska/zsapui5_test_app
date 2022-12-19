@@ -1,0 +1,82 @@
+<mvc:View controllerName="zscarrapp.controller.CarrierDetail"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form">
+    <Page id="page" title="{i18n>carrier}: {carrierDetail>/Carrname}" showNavButton="true" navButtonPress="onNavBack">
+        <content>
+            <f:SimpleForm
+						editable="false"
+						layout="ResponsiveGridLayout"
+						labelSpanL="3" labelSpanM="3" emptySpanL="4" emptySpanM="4"
+						columnsL="1" columnsM="1">
+						<f:content>
+							<Label text="{i18n>carrid}"/>
+							<Text text="{carrierDetail>/Carrid}"/>
+							<Label text="{i18n>carrname}"/>
+							<Text text="{carrierDetail>/Carrname}"/>
+							<Label text="{i18n>currcode}"/>
+							<Text text="{carrierDetail>/Currcode}"/>
+							<Label text="{i18n>url}"/>
+							<Text text="{carrierDetail>/Url}"/>
+						</f:content>
+					</f:SimpleForm>
+		
+					<Table id="idSflightTable"
+					items="{/}"
+					noDataText="{i18n>noData}"
+					>
+					<headerToolbar>
+						<OverflowToolbar>
+							<content>
+								<Title text="{i18n>flightstitle}" level="H1"/>
+							</content>
+						</OverflowToolbar>
+					</headerToolbar>
+					<columns>
+						<Column
+							width="12em">
+							<Text text="{i18n>carrid}" />
+						</Column>
+						<Column
+							minScreenWidth="Tablet">
+							<Text text="{i18n>connid}" />
+						</Column>
+						<Column
+							width="12em">
+							<Text text="{i18n>fldate}" />
+						</Column>
+						<Column
+							width="12em">
+							<Text text="{i18n>price}" />
+						</Column>
+						<Column
+							minScreenWidth="6em">
+							<Text text="{i18n>currcode}" />
+						</Column>
+						<Column
+							minScreenWidth="6em">
+							<Text text="{i18n>planetype}" />
+						</Column>
+						<Column
+							minScreenWidth="6em">
+							<Text text="{i18n>seatsmax}" />
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem type="Active" vAlign="Middle">
+							<cells>
+								<Text text="{Carrid}" />
+								<Text text="{Connid}" />
+								<Text text="{Fldate}" />
+								<Text text="{Price}" />
+								<Text text="{Currency}" />
+								<Text text="{Planetype}" />
+								<Text text="{Seatsmax}" />
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+        </content>
+    </Page>
+</mvc:View>
