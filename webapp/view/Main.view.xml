@@ -6,7 +6,7 @@
     <Page id="page" showHeader="false">
 		<!-- items="{/scarrSet}" - for oData binding-->
         <Table id="idScarrTable"
-		items="{/scarrSet}"
+		items="{/}"
 		itemPress="onPressItem"
         noDataText="{i18n>noData}"
 		>

@@ -8,7 +8,7 @@ sap.ui.define(
 
     return Controller.extend("zscarrapp.controller.Main", {
       onInit: function () {
-        // this.updateTableWithScarrData();
+        this.updateTableWithScarrData();
       },
       onPressItem: function (oEvent) {
         var oRowData = this.getSelectedRowData(oEvent);
@@ -23,25 +23,19 @@ sap.ui.define(
         });
       },
       updateTableWithScarrData: function () {
-        // var oScarrModel = this.getOwnerComponent().getModel("scarr");
-        // oScarrModel.read("/scarrSet", {
-        //   success: function (oData) {
-        //     //oData parsed to JSON and bind to table
-        //     var oTable = this.getView().byId("idScarrTable");
-        //     var oJSONModel = new sap.ui.model.json.JSONModel();
-        //     oJSONModel.setData(oData.results); //results because of nested data in model
-        //     oTable.setModel(oJSONModel);
-        //   }.bind(this),
-        //   error: function (oData) {
-        //     console.warn(oData);
-        //   },
-        // });
-        // var oTable = this.getView().byId("idScarrTable");
-        // var oScarrModel = this.getOwnerComponent().getModel("scarr");
-        // console.log(oScarrModel);
-        // var oJSONModel = new sap.ui.model.json.JSONModel();
-        // oJSONModel.setData(oScarrModel.oData); //results because of nested data in model
-        // oTable.setModel(oScarrModel);
+        var oScarrModel = this.getOwnerComponent().getModel("scarr");
+        oScarrModel.read("/scarrSet", {
+          success: function (oData) {
+            //oData parsed to JSON and bind to table
+            var oTable = this.getView().byId("idScarrTable");
+            var oJSONModel = new sap.ui.model.json.JSONModel();
+            oJSONModel.setData(oData.results); //results because of nested data in model
+            oTable.setModel(oJSONModel);
+          }.bind(this),
+          error: function (oData) {
+            console.warn(oData);
+          },
+        });
       },
       getSelectedRowData: function (oEvent) {
         //Get data of selected object (for table)
