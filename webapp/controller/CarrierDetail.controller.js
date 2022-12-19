@@ -52,9 +52,13 @@ sap.ui.define(
           filters: [aFilters],
           success: function (oData) {
             //oData parsed to JSON and bind to table
+            var convertedOData = oData.results.map(function (result) {
+              result.Fldate = result.Fldate.toLocaleString();
+              return result;
+            });
             var oTable = this.getView().byId("idSflightTable");
             var oJSONModel = new sap.ui.model.json.JSONModel();
-            oJSONModel.setData(oData.results); //results because of nested data in model
+            oJSONModel.setData(convertedOData); //results because of nested data in model
             oTable.setModel(oJSONModel);
           }.bind(this),
           error: function (oData) {
