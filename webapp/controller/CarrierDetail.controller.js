@@ -20,16 +20,15 @@ sap.ui.define(
         }
       },
       onRouteMatched: function () {
-        var sCarrier = window.location.href.slice(-2);
-        var regex = /^[A-Z]{2}$/; //check if url ends with Carrid (Two capital letters)
-        var isPatternValid = regex.test(sCarrier);
-        if (isPatternValid) {
+        var sCarrier = this.getCarrierID();
+        var isValid = this.checkRoute(sCarrier); //called when routed to view
+        if (isValid) {
           this.getCarrierFlights();
-          this.getCurrentCarrierData();
+          this.getCurrentCarrierInfo();
         }
       },
-      getCurrentCarrierData: function () {
-        var sCarrier = window.location.href.slice(-2);
+      getCurrentCarrierInfo: function () {
+        var sCarrier = this.getCarrierID();
         // var sPath = "/scarrSet('" + sCarrier + "')";
         // var oCarrierData = this.getOwnerComponent()
         //   .getModel("scarr")
@@ -40,16 +39,17 @@ sap.ui.define(
         var oScarrModel = this.getOwnerComponent().getModel("scarr");
         oScarrModel.read("/scarrSet('" + sCarrier + "')", {
           success: function (oData) {
-            console.log(oData);
             var oCarrierDetailModel =
               this.getOwnerComponent().getModel("carrierDetail");
             oCarrierDetailModel.setData(oData);
           }.bind(this),
-          error: function (oData) {},
+          error: function (oData) {
+            console.warn(oData);
+          },
         });
       },
       getCarrierFlights: function () {
-        var sCarrier = window.location.href.slice(-2);
+        var sCarrier = this.getCarrierID();
         // var oCarrierFilter = new sap.ui.model.Filter(
         //   "Carrid",
         //   sap.ui.model.FilterOperator.EQ,
@@ -64,6 +64,7 @@ sap.ui.define(
             //filters: [aFilters],
             success: function (oData) {
               //oData parsed to JSON and bind to table
+              console.log(oData);
               var convertedOData = oData.results.map(function (result) {
                 result.Fldate = result.Fldate.toLocaleString();
                 return result;
@@ -78,6 +79,13 @@ sap.ui.define(
             },
           }
         );
+      },
+      checkRoute: function (sPath) {
+        var regex = /^[A-Z]{2}$/; //check if url ends with Carrid (Two capital letters)
+        return regex.test(sPath);
+      },
+      getCarrierID: function () {
+        return window.location.href.slice(-2);
       },
     });
   }
